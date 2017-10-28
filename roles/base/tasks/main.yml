@@ -1,0 +1,85 @@
+---
+- name: Ensure SSH Directories
+  become: yes
+  file:
+    path: /home/vagrant/.ssh
+    state: directory
+    owner: vagrant
+    group: vagrant
+    mode: 0700
+
+- name: Copy SSH Key Files
+  become: yes
+  copy:
+    src: files/{{ item }}
+    dest: /home/vagrant/.ssh/{{ item }}
+    owner: vagrant
+    group: vagrant
+    mode: 0600
+  with_items:
+    - id_rsa
+    - id_rsa.pub
+    - config
+
+- name: Ensure Authorized SSH Key
+  become: yes
+  authorized_key:
+    user: vagrant
+    key:  "{{ lookup('file', '/home/vagrant/.ssh/id_rsa.pub') }}"
+    state: present
+
+- name: Remove Default Host Entry
+  become: yes
+  lineinfile:
+    dest: /etc/hosts
+    regexp: '^127\.0\.0\.1\s+k8s.*$'
+    state: absent
+
+- name: Ensure Hosts File
+  become: yes
+  lineinfile:
+    dest: /etc/hosts
+    line: "{{ item.ip }} {{ item.name }}"
+  with_items:
+    - { ip: "10.15.15.11", name: "kdev1" }
+    - { ip: "10.15.15.21", name: "kmas1" }
+    - { ip: "10.15.15.22", name: "kmas2" }
+    - { ip: "10.15.15.23", name: "kmas3" }
+    - { ip: "10.15.15.31", name: "kwor1" }
+    - { ip: "10.15.15.32", name: "kwor2" }
+    - { ip: "10.15.15.33", name: "kwor3" }
+
+- name: Ensure Base Packages
+  become: yes
+  apt:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - jq
+    - tree
+    - ntp
+
+- name: Ensure tzdata package is installed (Linux).
+  package:
+    name: tzdata
+    state: present
+
+- name: Set timezone
+  become: yes
+  become_method: sudo
+  timezone:
+    name: "Europe/Paris"
+    
+
+- name: Copy over the NTP configuration
+  become: true
+  copy:
+    src: files/{{ item }}
+    dest: /etc/{{ item }}
+    owner: root
+    group: root
+  with_items: 
+    - ntp.conf
+  notify:
+    - restart ntp
+    - force ntp update

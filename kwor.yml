@@ -1,0 +1,7 @@
+- hosts: kwor
+  remote_user: vagrant
+  serial: 1
+  roles:
+    - base
+    - etcd
+    - docker

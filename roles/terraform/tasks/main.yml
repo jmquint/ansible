@@ -1,0 +1,13 @@
+---
+# - name: Ensure tmp dir for terraform installation
+#   file:
+#     path: /home/vagrant/.terraform_tmpdir
+#     state: directory
+
+- name: Download terraform binary package and unzip
+  become: yes
+  unarchive:
+    src: https://releases.hashicorp.com/terraform/0.10.8/terraform_0.10.8_linux_amd64.zip?_ga=2.9202421.1326352719.1509200094-287124648.1508689087 
+    dest: /usr/local/bin
+    remote_src: yes
+

@@ -1,0 +1,48 @@
+---
+- name: Install etcd package
+  become: yes
+  apt:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - etcd
+
+- name: Set ETCD_NAME in file /etc/default/etcd
+  become: yes
+  lineinfile:
+    dest: /etc/default/etcd
+    regexp: '# ETCD_NAME=(.*)$'
+    line: 'ETCD_NAME="my-etcd"'
+
+- name: Set ETCD_DATA_DIR in file /etc/default/etcd
+  become: yes
+  lineinfile:
+    dest: /etc/default/etcd
+    regexp: '# ETCD_DATA_DIR=(.*)$'
+    line: 'ETCD_DATA_DIR="/var/lib/etcd/my.etcd"'
+
+- name: Set ETCD_LISTEN_CLIENT_URLS in file /etc/default/etcd
+  become: yes
+  lineinfile:
+    dest: /etc/default/etcd
+    regexp: '# ETCD_LISTEN_CLIENT_URLS=(.*)$'
+    line: 'ETCD_LISTEN_CLIENT_URLS="http://0.0.0.0:4001"'
+
+- name: Set ETCD_ADVERTISE_CLIENT_URLS in file /etc/default/etcd
+  become: yes
+  lineinfile:
+    dest: /etc/default/etcd
+    regexp: '# ETCD_ADVERTISE_CLIENT_URLS=(.*)$'
+    line: 'ETCD_ADVERTISE_CLIENT_URLS="http://0.0.0.0:4001"'
+
+- name: Enable etcd service
+  become: yes
+  systemd:
+    name: etcd
+    enabled: yes
+
+- name: Start etcd service
+  become: yes
+  systemd:
+    name: etcd
+    state: started

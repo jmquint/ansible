@@ -1,0 +1,6 @@
+- hosts: ketcd
+  remote_user: vagrant
+  serial: 1
+  roles:
+    - base
+    - etcd
