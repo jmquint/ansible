@@ -1,0 +1,43 @@
+---
+- name: Ensure git repos directory
+  become: yes
+  file:
+    path: /home/vagrant/repos
+    state: directory
+    owner: vagrant
+    group: vagrant
+
+- name: "Add jmq gihub private key to .ssh dir"
+  copy:
+    src: /home/keys/jmquint_github_rsa
+    dest: /etc/foo.conf
+    owner: vagrant
+    group: vagrant
+    mode: 0600
+
+- name: "Add jmq gihub public key to .ssh dir"
+  copy:
+    src: /home/keys/jmquint_github_rsa
+    dest: /etc/foo.conf
+    owner: vagrant
+    group: vagrant
+    mode: 0644
+
+- name: "Add github identityfile to .ssh/config file"
+  lineinfile:
+    path: /home/vagrant/.ssh/config
+    insertbefore: '^Host *'
+    line: "IdentityFile ~/.ssh/jmquint_github_rsa"
+
+- name: "Clone repo ansible but do not update if it exists"
+  git:
+    repo: ssh://github.com/jmquint/ansible.git
+    dest: /home/vagrant/repos
+    update: no
+
+- name: "Clone repo terraform-aws but do not update if it exists"
+  git:
+    repo: ssh://github.com/jmquint/terraform-aws.git
+    dest: /home/vagrant/repos
+    update: no
+
