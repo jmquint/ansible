@@ -3,5 +3,15 @@
   serial: 1
   roles:
     - base
-    - etcd
+#    - aws-cred
+#    - git
+#    - ansible
+#    - aws-cred
+#    - terraform
     - docker
+    - docker-compose
+#    - etcd
+#    - flannel
+#    - k8s-base
+#    - k8s-master
+
