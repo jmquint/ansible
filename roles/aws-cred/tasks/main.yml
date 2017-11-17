@@ -2,4 +2,4 @@
 - name: Add aws credentials 
   assemble:
     src: /home/shared/set-aws-admin-credentials.sh
-    dest: /home/vargant/.profile
+    dest: /home/vagrant/.profile

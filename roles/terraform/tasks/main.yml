@@ -11,3 +11,25 @@
     dest: /usr/local/bin
     remote_src: yes
 
+# Add terraform key + fichiers terraform
+- name: Ensure terraform directory
+  become: yes
+  file:
+    path: /home/vagrant/terraform
+    state: directory
+    owner: vagrant
+    group: vagrant
+
+
+- name: Copy terraform aws SSH Key Files
+  become: yes
+  copy:
+    src: /home/keys/{{ item }}
+    dest: /home/vagrant/.ssh/{{ item }}
+    owner: vagrant
+    group: vagrant
+    mode: 0600
+  with_items:
+    - terraform.pem
+    - terraform.pub
+

@@ -11,7 +11,7 @@
 - name: Copy SSH Key Files
   become: yes
   copy:
-    src: files/{{ item }}
+    src: /home/keys/{{ item }}
     dest: /home/vagrant/.ssh/{{ item }}
     owner: vagrant
     group: vagrant
