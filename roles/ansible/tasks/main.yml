@@ -1,7 +1,13 @@
 ---
 - name: Add list of ansible hosts file to /etc/ansible/hosts
   become: yes
-  assemble:
-    src: /home/shared/ansible-hosts
-    dest: /etc/ansible/hosts
+  blockinfile:
+    block: "{{ lookup('file', '/home/shared/ansible-hosts') }}"
+    dest: "~/.bashrc"
+    backup: yes
+#  assemble:
+#    src: /home/shared/ansible-hosts
+#    dest: /etc/ansible/hosts
+
+
 

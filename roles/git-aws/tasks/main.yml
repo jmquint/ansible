@@ -1,0 +1,9 @@
+---
+
+- name: "Clone repo StefQui/jmq-cloud.git but do not update if it exists"
+  git:
+    repo: ssh://github.com:StefQui/jmq-cloud.git
+    dest: "~/repos"
+    clone: no
+    update: no
+

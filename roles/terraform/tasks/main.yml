@@ -15,21 +15,31 @@
 - name: Ensure terraform directory
   become: yes
   file:
-    path: /home/vagrant/terraform
+    path: "~/terraform"
     state: directory
-    owner: vagrant
-    group: vagrant
+    owner: "{{ ansible_user_id }}"
+    group: "{{ ansible_user_id }}"
 
 
 - name: Copy terraform aws SSH Key Files
   become: yes
   copy:
     src: /home/keys/{{ item }}
-    dest: /home/vagrant/.ssh/{{ item }}
-    owner: vagrant
-    group: vagrant
+    dest: "~/.ssh/{{ item }}"
+    owner: "{{ ansible_user_id }}"
+    group: "{{ ansible_user_id }}"
     mode: 0600
   with_items:
     - terraform.pem
     - terraform.pub
+
+# - name: Copy terraform files to terraform directory
+#   copy:
+#     src: "~/repos/tf02/{{ item }}"
+#     dest: "~/terraform/{{ item }}"
+#     owner: "{{ ansible_user_id }}"
+#     group: "{{ ansible_user_id }}"
+#   with_items:
+#     - main.tf
+#     - variables.tf
 

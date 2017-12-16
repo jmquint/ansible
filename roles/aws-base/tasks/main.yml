@@ -1,0 +1,59 @@
+- name: "Create partition 1 on disk /dev/xvdh"
+  become: yes
+  parted:
+    device: /dev/xvdh
+    number: 1
+    state: present
+
+- name: "Create ext4 filesystem on partition xvdh1"
+  become: yes
+  filesystem:
+    fstype: ext4
+    dev: /dev/xvdh1
+
+- name: "Mount 2nd disk on /home/smarttle"
+  become: yes
+  mount:
+    path: /home/smarttle
+    src: /dev/xvdh1
+    fstype: ext4
+    state: mounted
+
+- name: "Check if nodejs is installed"
+  shell: dpkg-query -W 'nodejs'
+  ignore_errors: True
+  register: is_nodejs
+
+- name: "Install nodejs step1"
+  shell: curl -sL https://deb.nodesource.com/setup_9.x | sudo -E bash - >> /tmp/nodejs-install.log
+  when: is_nodejs|failed
+
+- name: "install package nodejs"
+  become: yes
+  apt:
+    name: nodejs
+
+- name: "Check if yarn is installed"
+  shell: dpkg-query -W 'yarn'
+  ignore_errors: True
+  register: is_yarn
+
+- name: "Install yarn step1"
+  shell: curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -  >> /tmp/yarn-install.log
+  when: is_yarn|failed
+
+- name: "Install yarn step2"
+  shell: echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list >> /tmp/yarn-install.log
+  when: is_yarn|failed
+
+- name: "install package yarn"
+  become: yes
+  apt:
+    name: yarn
+    update_cache: yes
+
+- name: "install java 8"
+  become: yes
+  apt:
+    name: openjdk-8-jre-headless
+

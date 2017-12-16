@@ -3,7 +3,6 @@
   serial: 1
   roles:
     - base
-    - aws-cred
     - git
     - ansible
     - aws-cred

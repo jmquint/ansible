@@ -46,7 +46,7 @@
 - name: Ensure User in Docker Group
   become: yes
   user:
-    name=vagrant
+    name="{{ ansible_user_id }}"
     groups=docker
     append=yes
 

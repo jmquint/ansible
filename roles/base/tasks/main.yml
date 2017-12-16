@@ -2,19 +2,19 @@
 - name: Ensure SSH Directories
   become: yes
   file:
-    path: /home/vagrant/.ssh
+    path: "~/.ssh"
     state: directory
-    owner: vagrant
-    group: vagrant
+    owner: "{{ ansible_user_id }}"
+    group: "{{ ansible_user_id }}"
     mode: 0700
 
 - name: Copy SSH Key Files
   become: yes
   copy:
     src: /home/keys/{{ item }}
-    dest: /home/vagrant/.ssh/{{ item }}
-    owner: vagrant
-    group: vagrant
+    dest: "~/.ssh/{{ item }}"
+    owner: "{{ ansible_user_id }}"
+    group: "{{ ansible_user_id }}"
     mode: 0600
   with_items:
     - id_rsa
@@ -24,8 +24,8 @@
 - name: Ensure Authorized SSH Key
   become: yes
   authorized_key:
-    user: vagrant
-    key:  "{{ lookup('file', '/home/vagrant/.ssh/id_rsa.pub') }}"
+    user: "{{ ansible_user_id }}"
+    key:  "{{ lookup('file', '~/.ssh/id_rsa.pub' ) }}"
     state: present
 
 - name: Remove Default Host Entry
@@ -48,6 +48,16 @@
     - { ip: "10.15.15.31", name: "kwor1" }
     - { ip: "10.15.15.32", name: "kwor2" }
     - { ip: "10.15.15.33", name: "kwor3" }
+
+- name: Ensure .vimrc exists
+  file:
+    path: "~/.vimrc"
+    state: touch
+
+- name: Ensure .vimrc have nice color theme
+  lineinfile:
+    dest: ~/.vimrc
+    line: ":highlight Comment ctermfg=green"
 
 - name: Ensure Base Packages
   become: yes

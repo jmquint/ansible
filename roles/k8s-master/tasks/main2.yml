@@ -2,19 +2,19 @@
 - name: Ensure SSH Directories
   become: yes
   file:
-    path: /home/vagrant/.ssh
+    path: "~/.ssh"
     state: directory
-    owner: vagrant
-    group: vagrant
+    owner: "{{ ansible_user_id }}"
+    group: "{{ ansible_user_id }}"
     mode: 0700
 
 - name: Copy SSH Key Files
   become: yes
   copy:
     src: files/{{ item }}
-    dest: /home/vagrant/.ssh/{{ item }}
-    owner: vagrant
-    group: vagrant
+    dest: "~/.ssh/{{ item }}"
+    owner: "{{ ansible_user_id }}"
+    group: "{{ ansible_user_id }}"
     mode: 0600
   with_items:
     - id_rsa
@@ -24,8 +24,8 @@
 - name: Ensure Authorized SSH Key
   become: yes
   authorized_key:
-    user: vagrant
-    key:  "{{ lookup('file', '/home/vagrant/.ssh/id_rsa.pub') }}"
+    user: "{{ ansible_user_id }}"
+    key:  "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
     state: present
 
 - name: Remove Default Host Entry
@@ -93,7 +93,7 @@
 - name: Ensure User in Docker Group
   become: yes
   user:
-    name=vagrant
+    name="{{ ansible_user_id }}"
     groups=docker
     append=yes
 

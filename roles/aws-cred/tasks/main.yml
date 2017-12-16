@@ -1,5 +1,8 @@
 ---
-- name: Add aws credentials 
-  assemble:
-    src: /home/shared/set-aws-admin-credentials.sh
-    dest: /home/vagrant/.profile
+
+- name: Add aws credentials
+  blockinfile:
+    block: "{{ lookup('file', '/home/shared/set-aws-cred.sh') }}"
+    dest: "~/.bashrc"
+    backup: yes
+

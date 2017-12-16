@@ -4,9 +4,11 @@
   register: dockercompose
 
 - name: Install docker compose
+  become: yes
   shell: curl -L https://github.com/docker/compose/releases/download/1.16.1/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
   when: dockercompose.stat.exists == false
 
 - name: Apply executable permission
+  become: yes
   file: path=/usr/local/bin/docker-compose mode="u+x,g+x"
 

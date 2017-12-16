@@ -1,0 +1,23 @@
+- hosts: aws
+  vars:
+    homedir: "/home/ubuntu"
+  remote_user: ubuntu
+  serial: 1
+  roles:
+#    - base
+    - aws-base
+#    - aws-cred
+    - git
+##    - git-aws
+    - haproxy
+#    - ansible
+#    - aws-cred
+#    - terraform
+    - docker
+    - docker-compose
+#    - terraform
+#    - etcd
+#    - flannel
+#    - k8s-base
+#    - k8s-master
+
